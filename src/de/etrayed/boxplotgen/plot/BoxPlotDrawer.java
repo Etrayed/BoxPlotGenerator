@@ -50,7 +50,7 @@ public class BoxPlotDrawer {
     private static void drawPlot(Graphics2D graphics, BoxPlotInfo info, int height) {
         graphics.setColor(Color.black);
 
-        int onePixel = SEPARATING / info.getScaling();
+        double onePixel = (double) SEPARATING / info.getScaling();
         int y = height - SEPARATING - 5;
         int y1;
 
