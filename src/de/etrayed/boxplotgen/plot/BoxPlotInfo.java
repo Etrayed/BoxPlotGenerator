@@ -1,5 +1,7 @@
 package de.etrayed.boxplotgen.plot;
 
+import java.util.Objects;
+
 /**
  * @author Etrayed
  */
@@ -43,8 +45,40 @@ public class BoxPlotInfo {
         return scaling;
     }
 
-    public static BoxPlotInfo createNew(double[] values) {
-        return BoxPlotValueCalculator.withValues(values);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BoxPlotInfo that = (BoxPlotInfo) o;
+
+        return Double.compare(that.minimum, minimum) == 0 &&
+                Double.compare(that.lowerQuartile, lowerQuartile) == 0 &&
+                Double.compare(that.median, median) == 0 &&
+                Double.compare(that.upperQuartile, upperQuartile) == 0 &&
+                Double.compare(that.maximum, maximum) == 0 &&
+                Float.compare(that.scaling, scaling) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(minimum, lowerQuartile, median, upperQuartile, maximum, scaling);
+    }
+
+    @Override
+    public String toString() {
+        return "BoxPlotInfo{" +
+                "minimum=" + minimum +
+                ", lowerQuartile=" + lowerQuartile +
+                ", median=" + median +
+                ", upperQuartile=" + upperQuartile +
+                ", maximum=" + maximum +
+                ", scaling=" + scaling +
+                '}';
+    }
+
+    public static BoxPlotInfo createNew(double[] values, float scaling) {
+        return BoxPlotValueCalculator.withValues(values, scaling);
     }
 
     public static BoxPlotInfo createNew(double minimum, double lowerQuartile, double median, double upperQuartile,
