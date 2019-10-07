@@ -1,5 +1,6 @@
 package de.etrayed.boxplotgen.plot;
 
+import java.awt.*;
 import java.util.Objects;
 
 /**
@@ -19,6 +20,10 @@ public class BoxPlotInfo {
         this.upperQuartile = upperQuartile;
         this.maximum = maximum;
         this.scaling = scaling;
+    }
+
+    public void drawOn(Graphics2D graphicsCopy) {
+        BoxPlotDrawer.drawOn(graphicsCopy, this);
     }
 
     public double getMinimum() {
