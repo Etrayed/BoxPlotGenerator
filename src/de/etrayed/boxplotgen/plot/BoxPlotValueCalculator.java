@@ -7,7 +7,7 @@ import java.util.Arrays;
  */
 class BoxPlotValueCalculator {
 
-    static BoxPlotInfo withValues(double[] values, float scaling) {
+    static BoxPlotInfo withValues(double[] values, int scaling) {
         double minimum;
         double lowerQuartile;
         double median;

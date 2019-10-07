@@ -10,10 +10,10 @@ public class BoxPlotInfo {
 
     private final double minimum, lowerQuartile, median, upperQuartile, maximum;
 
-    private final float scaling;
+    private final int scaling;
 
     private BoxPlotInfo(double minimum, double lowerQuartile, double median, double upperQuartile, double maximum,
-                        float scaling) {
+                        int scaling) {
         this.minimum = minimum;
         this.lowerQuartile = lowerQuartile;
         this.median = median;
@@ -22,23 +22,23 @@ public class BoxPlotInfo {
         this.scaling = scaling;
     }
 
-    public void drawOn(Graphics2D graphicsCopy) {
-        BoxPlotDrawer.drawOn(graphicsCopy, this);
+    public void drawOn(Graphics2D graphicsCopy, int height) {
+        BoxPlotDrawer.drawOn(graphicsCopy, this, height);
     }
 
     public double getMinimum() {
         return minimum;
     }
 
-    public double getLowerQuartile() {
+    double getLowerQuartile() {
         return lowerQuartile;
     }
 
-    public double getMedian() {
+    double getMedian() {
         return median;
     }
 
-    public double getUpperQuartile() {
+    double getUpperQuartile() {
         return upperQuartile;
     }
 
@@ -46,7 +46,7 @@ public class BoxPlotInfo {
         return maximum;
     }
 
-    public float getScaling() {
+    public int getScaling() {
         return scaling;
     }
 
@@ -62,7 +62,7 @@ public class BoxPlotInfo {
                 Double.compare(that.median, median) == 0 &&
                 Double.compare(that.upperQuartile, upperQuartile) == 0 &&
                 Double.compare(that.maximum, maximum) == 0 &&
-                Float.compare(that.scaling, scaling) == 0;
+                that.scaling == scaling;
     }
 
     @Override
@@ -82,12 +82,12 @@ public class BoxPlotInfo {
                 '}';
     }
 
-    public static BoxPlotInfo createNew(double[] values, float scaling) {
+    public static BoxPlotInfo createNew(double[] values, int scaling) {
         return BoxPlotValueCalculator.withValues(values, scaling);
     }
 
     public static BoxPlotInfo createNew(double minimum, double lowerQuartile, double median, double upperQuartile,
-                                        double maximum, float scaling) {
+                                        double maximum, int scaling) {
         ensureRatio(minimum, lowerQuartile);
         ensureRatio(lowerQuartile, median);
         ensureRatio(median, upperQuartile);
