@@ -48,7 +48,8 @@ public class FileExporter {
 
         int height = (BoxPlotDrawer.SEPARATING * (((int) (highestMaximum - lowestMinimum) / scaling) + 2)) + 10;
 
-        BufferedImage image = new BufferedImage(300, height + (boxPlotInfoList.size() * 20), BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(300, height + (boxPlotInfoList.size() == 1 ? 0
+                : (boxPlotInfoList.size() * 20)), BufferedImage.TYPE_INT_RGB);
         Graphics2D graphicsCopy = (Graphics2D) image.getGraphics().create();
 
         graphicsCopy.setColor(Color.white);
