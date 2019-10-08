@@ -1,5 +1,6 @@
 package de.etrayed.boxplotgen.util;
 
+import de.etrayed.boxplotgen.BoxPlotGenerator;
 import de.etrayed.boxplotgen.plot.BoxPlotDrawer;
 import de.etrayed.boxplotgen.plot.BoxPlotInfo;
 
@@ -11,24 +12,49 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 /**
  * @author Etrayed
  */
 public class FileExporter {
 
-    public void export(Path path, BoxPlotInfo info) throws IOException {
-        int height = BoxPlotDrawer.SEPARATING * (((int) (info.getMaximum() - info.getMinimum()) / info.getScaling()) + 2);
+    public void export(Path path, int scaling) throws IOException {
+        List<BoxPlotInfo> boxPlotInfoList = BoxPlotGenerator.getInstance().getBoxPlotInfoList();
 
-        height += 10;
+        if(boxPlotInfoList.size() == 0) {
+            return;
+        }
 
-        BufferedImage image = new BufferedImage(300, height, BufferedImage.TYPE_INT_RGB);
+        BoxPlotInfo[] boxPlotInfoArray = boxPlotInfoList.toArray(new BoxPlotInfo[boxPlotInfoList.size()]);
+        double highestMaximum = boxPlotInfoArray[0].maximum;
+        double lowestMinimum = boxPlotInfoArray[0].minimum;
+
+        if(boxPlotInfoArray.length > 1) {
+            int index = 1;
+
+            while (index < boxPlotInfoArray.length) {
+                if(boxPlotInfoArray[index].maximum > highestMaximum) {
+                    highestMaximum = boxPlotInfoArray[index].maximum;
+                }
+
+                if(boxPlotInfoArray[index].minimum < lowestMinimum) {
+                    lowestMinimum = boxPlotInfoArray[index].minimum;
+                }
+
+                index++;
+            }
+        }
+
+        int height = (BoxPlotDrawer.SEPARATING * (((int) (highestMaximum - lowestMinimum) / scaling) + 2)) + 10;
+
+        BufferedImage image = new BufferedImage(300, height + (boxPlotInfoList.size() * 20), BufferedImage.TYPE_INT_RGB);
         Graphics2D graphicsCopy = (Graphics2D) image.getGraphics().create();
 
         graphicsCopy.setColor(Color.white);
-        graphicsCopy.fillRect(0, 0, 300, height);
+        graphicsCopy.fillRect(0, 0, 300, image.getHeight());
 
-        info.drawOn(graphicsCopy, height);
+        BoxPlotDrawer.drawOn(graphicsCopy, boxPlotInfoArray, lowestMinimum, highestMaximum, scaling, height);
 
         graphicsCopy.dispose();
 
