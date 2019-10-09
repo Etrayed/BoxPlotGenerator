@@ -59,7 +59,8 @@ public class BoxPlotDrawer {
 
         int max = height - 5;
 
-        for (int y = SEPARATING + 5, count = (int) (minimum + ((maximum - minimum) / scaling)); y < max; y+= SEPARATING, count--) {
+        for (int y = SEPARATING + 5, count = (int) (minimum + ((maximum - minimum) / scaling)); y < max; y+= SEPARATING,
+                count -= scaling) {
             graphics.drawLine(SCALA_BASE_X - 5, y, SCALA_BASE_X, y);
 
             String number = String.valueOf(count);
