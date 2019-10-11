@@ -6,6 +6,6 @@ package de.etrayed.boxplotgen;
 public class Main {
 
     public static void main(String[] args) {
-        BoxPlotGenerator.newInstance().runCommandLoop();
+        BoxPlotGenerator.newInstance().openWindow();
     }
 }
