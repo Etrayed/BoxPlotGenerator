@@ -3,6 +3,7 @@ package de.etrayed.boxplotgen.visual.component;
 import de.etrayed.boxplotgen.plot.BoxPlotInfo;
 import de.etrayed.boxplotgen.util.Callback;
 import de.etrayed.boxplotgen.util.EasyCallable;
+import de.etrayed.boxplotgen.visual.Window;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,12 @@ class BoxPlotCreateDialog extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(null);
         setResizable(false);
+        setTitle("Neues BoxPlot erstellen");
+        setIconImage(Window.ICON);
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        setBounds(Window.center(screenSize.width, 800), Window.center(screenSize.height, 600), 800, 600);
 
         try {
             Callable<BoxPlotInfo> infoCallable;
@@ -38,6 +45,7 @@ class BoxPlotCreateDialog extends JDialog {
 
             JButton confirmButton = new JButton("Erstellen");
 
+            confirmButton.setBounds(Window.center(getWidth(), 150), 450, 150, 40);
             confirmButton.addActionListener(new ActionListener() {
 
                 @Override
@@ -49,6 +57,8 @@ class BoxPlotCreateDialog extends JDialog {
                     }
                 }
             });
+
+            add(confirmButton);
         } catch (Exception e) {
             callback.handleException(e);
         }

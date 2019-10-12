@@ -37,7 +37,7 @@ public class BoxPlotGenerator {
         window.repaintCanvas();
     }
 
-    public void exportCurrentToFile(OutputStream outputStream) {
+    public void exportCurrent(OutputStream outputStream) {
         try {
             fileExporter.export(outputStream, globalScaling);
         } catch (IOException e) {

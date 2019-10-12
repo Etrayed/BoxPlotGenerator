@@ -38,8 +38,14 @@ public class BoxPlotCanvas extends JComponent {
 
     @Override
     protected void paintComponent(Graphics graphics) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            BoxPlotGenerator.getInstance().exportCurrentToFile(outputStream);
+        if(BoxPlotGenerator.getInstance().getBoxPlotInfoList().size() == 0) {
+            return;
+        }
+
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            BoxPlotGenerator.getInstance().exportCurrent(outputStream);
 
             ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
 

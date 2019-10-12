@@ -57,5 +57,7 @@ public class FileExporter {
         graphicsCopy.dispose();
 
         ImageIO.write(image, "PNG", outputStream);
+
+        outputStream.flush();
     }
 }

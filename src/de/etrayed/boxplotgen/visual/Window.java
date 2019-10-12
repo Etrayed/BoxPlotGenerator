@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class Window {
 
-    private static final BufferedImage ICON;
+    public static final BufferedImage ICON;
 
     static {
         try {

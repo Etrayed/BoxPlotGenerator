@@ -65,7 +65,7 @@ public class BPGMenuBar extends JMenuBar {
     }
 
     private void setupScalingDialog(JFrame parent) {
-        JSpinner scalingSpinner = new JSpinner(new SpinnerNumberModel(1, 0, Integer.MAX_VALUE,
+        JSpinner scalingSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE,
                 1));
 
         scalingDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -73,6 +73,7 @@ public class BPGMenuBar extends JMenuBar {
                 + Window.center(parent.getHeight(), 75), 75, 90);
         scalingDialog.setResizable(false);
         scalingDialog.setLayout(null);
+        scalingDialog.setIconImage(Window.ICON);
 
         scalingSpinner.setSize(192, 50);
         scalingSpinner.addChangeListener(new ChangeListener() {
@@ -93,6 +94,7 @@ public class BPGMenuBar extends JMenuBar {
                 + Window.center(parent.getHeight(), 75), 75, 90);
         deleteDialog.setResizable(false);
         deleteDialog.setLayout(null);
+        deleteDialog.setIconImage(Window.ICON);
 
         boxPlotChooser = new JComboBox<>();
         boxPlotChooser.setSize(192, 50);
@@ -194,7 +196,7 @@ public class BPGMenuBar extends JMenuBar {
 
                         OutputStream outputStream = new FileOutputStream(selectedFile);
 
-                        BoxPlotGenerator.getInstance().exportCurrentToFile(outputStream);
+                        BoxPlotGenerator.getInstance().exportCurrent(outputStream);
 
                         outputStream.close();
                     } catch (IOException ex) {
