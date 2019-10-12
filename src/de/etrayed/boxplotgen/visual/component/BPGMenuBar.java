@@ -3,6 +3,7 @@ package de.etrayed.boxplotgen.visual.component;
 import de.etrayed.boxplotgen.BoxPlotGenerator;
 import de.etrayed.boxplotgen.plot.BoxPlotInfo;
 import de.etrayed.boxplotgen.util.Callback;
+import de.etrayed.boxplotgen.visual.Window;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -13,6 +14,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.function.Predicate;
 
 /**
@@ -65,8 +69,8 @@ public class BPGMenuBar extends JMenuBar {
                 1));
 
         scalingDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        scalingDialog.setBounds(parent.getX() + (parent.getWidth() - 75) / 2, parent.getY()
-                + (parent.getHeight() - 75) / 2, 75, 90);
+        scalingDialog.setBounds(parent.getX() + Window.center(parent.getWidth(), 75), parent.getY()
+                + Window.center(parent.getHeight(), 75), 75, 90);
         scalingDialog.setResizable(false);
         scalingDialog.setLayout(null);
 
@@ -85,8 +89,8 @@ public class BPGMenuBar extends JMenuBar {
 
     private void setupDeleteDialog(JFrame parent) {
         deleteDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        deleteDialog.setBounds(parent.getX() + (parent.getWidth() - 75) / 2, parent.getY()
-                + (parent.getHeight() - 75) / 2, 75, 90);
+        deleteDialog.setBounds(parent.getX() + Window.center(parent.getWidth(), 75), parent.getY()
+                + Window.center(parent.getHeight(), 75), 75, 90);
         deleteDialog.setResizable(false);
         deleteDialog.setLayout(null);
 
@@ -175,12 +179,27 @@ public class BPGMenuBar extends JMenuBar {
 
         exportItem.addActionListener(new ActionListener() {
 
+            @SuppressWarnings("ResultOfMethodCallIgnored")
             @Override
             public void actionPerformed(ActionEvent e) {
                 int result = fileChooser.showSaveDialog(getParent());
 
                 if(result == JFileChooser.APPROVE_OPTION) {
-                    BoxPlotGenerator.getInstance().exportCurrentToFile(fileChooser.getSelectedFile().toPath());
+                    File selectedFile = fileChooser.getSelectedFile();
+
+                    try {
+                        if(!selectedFile.exists()) {
+                            selectedFile.createNewFile();
+                        }
+
+                        OutputStream outputStream = new FileOutputStream(selectedFile);
+
+                        BoxPlotGenerator.getInstance().exportCurrentToFile(outputStream);
+
+                        outputStream.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });

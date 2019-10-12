@@ -47,7 +47,7 @@ public class Window {
         frame.setLayout(null);
         frame.setResizable(false);
         frame.setIconImage(ICON);
-        frame.setBounds((screenSize.width - 335) / 2, (screenSize.height - 700) / 2, 335, 700);
+        frame.setBounds(center(screenSize.width, 335), center(screenSize.height, 700), 335, 700);
         frame.setJMenuBar(new BPGMenuBar(frame));
 
         ((JScrollBar) scrollBar).setBounds(300, 0, 30, 630);
@@ -78,5 +78,9 @@ public class Window {
 
     public void repaintCanvas() {
         canvas.repaint();
+    }
+
+    public static int center(int full, int value) {
+        return (full - value) / 2;
     }
 }

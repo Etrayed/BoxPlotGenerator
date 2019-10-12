@@ -9,9 +9,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 /**
@@ -19,7 +16,7 @@ import java.util.List;
  */
 public class FileExporter {
 
-    public void export(Path path, int scaling) throws IOException {
+    public void export(OutputStream outputStream, int scaling) throws IOException {
         List<BoxPlotInfo> boxPlotInfoList = BoxPlotGenerator.getInstance().getBoxPlotInfoList();
 
         if(boxPlotInfoList.size() == 0) {
@@ -59,8 +56,6 @@ public class FileExporter {
 
         graphicsCopy.dispose();
 
-        try(OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE)) {
-            ImageIO.write(image, "PNG", outputStream);
-        }
+        ImageIO.write(image, "PNG", outputStream);
     }
 }

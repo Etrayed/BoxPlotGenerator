@@ -5,7 +5,7 @@ import de.etrayed.boxplotgen.util.FileExporter;
 import de.etrayed.boxplotgen.visual.Window;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +37,9 @@ public class BoxPlotGenerator {
         window.repaintCanvas();
     }
 
-    public void exportCurrentToFile(Path path) {
+    public void exportCurrentToFile(OutputStream outputStream) {
         try {
-            fileExporter.export(path, globalScaling);
+            fileExporter.export(outputStream, globalScaling);
         } catch (IOException e) {
             e.printStackTrace();
         }
