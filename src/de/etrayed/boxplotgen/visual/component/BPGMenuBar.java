@@ -9,10 +9,9 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,8 +64,7 @@ public class BPGMenuBar extends JMenuBar {
     }
 
     private void setupScalingDialog(JFrame parent) {
-        JSpinner scalingSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE,
-                1));
+        JSpinner scalingSpinner = new JSpinner(new SpinnerNumberModel(1, 1, null, 1));
 
         scalingDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         scalingDialog.setBounds(parent.getX() + Window.center(parent.getWidth(), 75), parent.getY()
@@ -89,31 +87,40 @@ public class BPGMenuBar extends JMenuBar {
     }
 
     private void setupDeleteDialog(JFrame parent) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        deleteDialog.setBounds(Window.center(screenSize.width, 195), Window.center(screenSize.height, 80),
+                195, 80);
         deleteDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        deleteDialog.setBounds(parent.getX() + Window.center(parent.getWidth(), 75), parent.getY()
-                + Window.center(parent.getHeight(), 75), 75, 90);
         deleteDialog.setResizable(false);
         deleteDialog.setLayout(null);
         deleteDialog.setIconImage(Window.ICON);
 
         boxPlotChooser = new JComboBox<>();
-        boxPlotChooser.setSize(192, 50);
-        boxPlotChooser.addItemListener(new ItemListener() {
+        boxPlotChooser.setBounds(0, 0, 132, 40);
+
+        JButton confirmButton = new JButton("✔");
+
+        confirmButton.setBounds(142, 0, 50, 40);
+        confirmButton.addActionListener(new ActionListener() {
 
             @Override
-            public void itemStateChanged(ItemEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 BoxPlotGenerator.getInstance().getBoxPlotInfoList().removeIf(new Predicate<BoxPlotInfo>() {
 
                     @Override
                     public boolean test(BoxPlotInfo info) {
-                        return info.name.equals(e.getItem());
+                        return info.name.equals(boxPlotChooser.getSelectedItem());
                     }
                 });
                 BoxPlotGenerator.getInstance().repaintCanvas();
+
+                deleteDialog.setVisible(false);
             }
         });
 
         deleteDialog.add(boxPlotChooser);
+        deleteDialog.add(confirmButton);
     }
 
     private void setupFileChooser() {
@@ -140,6 +147,14 @@ public class BPGMenuBar extends JMenuBar {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(BoxPlotGenerator.getInstance().getBoxPlotInfoList().size() >= 12) {
+                    JOptionPane.showMessageDialog(getParent(), "Es nur 12 BoxPlots gleichzeitig erlaubt!");
+
+                    Toolkit.getDefaultToolkit().beep();
+
+                    return;
+                }
+
                 rawCreateDialog.setVisible(true);
             }
         });
@@ -148,6 +163,14 @@ public class BPGMenuBar extends JMenuBar {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(BoxPlotGenerator.getInstance().getBoxPlotInfoList().size() >= 12) {
+                    JOptionPane.showMessageDialog(getParent(), "Es nur 12 BoxPlots gleichzeitig erlaubt!");
+
+                    Toolkit.getDefaultToolkit().beep();
+
+                    return;
+                }
+
                 calculatedCreateDialog.setVisible(true);
             }
         });
@@ -189,6 +212,10 @@ public class BPGMenuBar extends JMenuBar {
                 if(result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
 
+                    if(!endsWithPNG(selectedFile.getName())) {
+                        selectedFile = new File(selectedFile.getPath() + ".png");
+                    }
+
                     try {
                         if(!selectedFile.exists()) {
                             selectedFile.createNewFile();
@@ -220,5 +247,9 @@ public class BPGMenuBar extends JMenuBar {
         manageMenu.add(scalingItem);
 
         this.add(manageMenu);
+    }
+
+    private boolean endsWithPNG(String str) {
+        return str.length() > 4 && str.substring(str.length() - 4).equalsIgnoreCase(".png");
     }
 }

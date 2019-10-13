@@ -22,7 +22,7 @@ public class BoxPlotGenerator {
 
     private final Window window;
 
-    private int globalScaling;
+    private int globalScaling = 1;
 
     private BoxPlotGenerator() {
         this.fileExporter = new FileExporter();

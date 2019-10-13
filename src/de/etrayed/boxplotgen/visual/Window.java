@@ -18,6 +18,8 @@ public class Window {
 
     public static final BufferedImage ICON;
 
+    private static final int DEFAULT_SCROLL_BAR_MAX = 700; // TODO: Fix ScrollBar
+
     static {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -38,7 +40,7 @@ public class Window {
 
     public Window() {
         this.frame = new JFrame("BoxPlotGenerator");
-        this.scrollBar = new JScrollBar(JScrollBar.VERTICAL, 0, 700, 0, 700);
+        this.scrollBar = new JScrollBar(JScrollBar.VERTICAL, 0, DEFAULT_SCROLL_BAR_MAX, 0, DEFAULT_SCROLL_BAR_MAX);
         this.canvas = new BoxPlotCanvas();
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -69,7 +71,7 @@ public class Window {
     }
 
     public void setScrollBarMaximum(int maximum) {
-        if(maximum < 700) {
+        if(maximum < DEFAULT_SCROLL_BAR_MAX) {
             return;
         }
 

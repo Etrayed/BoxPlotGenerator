@@ -53,7 +53,8 @@ public class BoxPlotCanvas extends JComponent {
 
             inputStream.close();
 
-            ((Graphics2D) graphics).drawImage(image.getSubimage(0, startY, 300, 700 - startY), null, 0, 0);
+            ((Graphics2D) graphics).drawImage(image.getSubimage(0, startY, 300, image.getHeight() < 700
+                    ? image.getHeight() : (700 - startY)), null, 0, 0);
 
             BoxPlotGenerator.getInstance().setWindowScrollBarMaximum(image.getHeight());
         } catch (IOException e) {

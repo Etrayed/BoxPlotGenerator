@@ -69,7 +69,7 @@ public class BoxPlotInfo {
 
     private static void ensureRatio(double d1, double d2) {
         if(d1 > d2) {
-            throw new IllegalArgumentException("Incorrect ratio: " + d1 + " > " + d2);
+            throw new IllegalArgumentException(d1 + " > " + d2);
         }
     }
 }
