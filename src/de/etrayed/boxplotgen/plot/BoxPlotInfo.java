@@ -1,11 +1,17 @@
 package de.etrayed.boxplotgen.plot;
 
+import java.awt.*;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 /**
  * @author Etrayed
  */
 public class BoxPlotInfo {
+
+    private static final Map<BoxPlotInfo, Color> COLOR_MAP = new ConcurrentHashMap<>();
 
     public final String name;
 
@@ -13,6 +19,9 @@ public class BoxPlotInfo {
 
     final double lowerQuartile, median, upperQuartile;
 
+    final Color color;
+
+    @SuppressWarnings("Anonymous2MethodRef")
     private BoxPlotInfo(String name, double minimum, double lowerQuartile, double median, double upperQuartile,
                         double maximum) {
         this.name = name;
@@ -21,6 +30,18 @@ public class BoxPlotInfo {
         this.median = median;
         this.upperQuartile = upperQuartile;
         this.maximum = maximum;
+        this.color = BoxPlotDrawer.randomColor(new Predicate<Color>() {
+
+            @Override
+            public boolean test(Color color) {
+                return COLOR_MAP.containsValue(color);
+            }
+        });
+    }
+
+    @Override
+    protected void finalize() {
+        COLOR_MAP.remove(this);
     }
 
     @Override

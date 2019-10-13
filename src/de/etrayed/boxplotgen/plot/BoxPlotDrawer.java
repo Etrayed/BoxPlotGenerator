@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 /**
  * @author Etrayed
@@ -27,27 +27,27 @@ public class BoxPlotDrawer {
                 Color.lightGray, Color.magenta, Color.pink, Color.red, Color.orange, Color.YELLOW));
     }
 
+    static Color randomColor(Predicate<Color> colorPredicate) {
+        Color color;
+
+        do {
+            color = ALL_COLORS.get(COLOR_RANDOM.nextInt(12));
+        } while (colorPredicate.test(color));
+
+        return color;
+    }
+
     public static void drawOn(Graphics2D graphics, BoxPlotInfo[] info, double minimum, double maximum, int scaling, int height) {
         drawScala(graphics, minimum, maximum, scaling, height);
 
         if(info.length == 1) {
             drawPlot(graphics, info[0], Color.black, minimum, scaling, height);
         } else {
-            Map<BoxPlotInfo, Color> colorMap = new HashMap<>();
-
             for (BoxPlotInfo boxPlotInfo : info) {
-                Color color;
-
-                do {
-                    color = ALL_COLORS.get(COLOR_RANDOM.nextInt(12));
-                } while (colorMap.containsValue(color));
-
-                colorMap.put(boxPlotInfo, color);
-
-                drawPlot(graphics, boxPlotInfo, color, minimum, scaling, height);
+                drawPlot(graphics, boxPlotInfo, boxPlotInfo.color, minimum, scaling, height);
             }
 
-            drawLegend(graphics, height, colorMap);
+            drawLegend(graphics, height, info);
         }
     }
 
@@ -59,8 +59,7 @@ public class BoxPlotDrawer {
 
         int max = height - 5;
 
-        for (int y = SEPARATING + 5, count = (int) (minimum + ((maximum - minimum) / scaling)); y < max; y+= SEPARATING,
-                count -= scaling) {
+        for (int y = SEPARATING + 5, count = (int) maximum; y < max; y+= SEPARATING, count -= scaling) {
             graphics.drawLine(SCALA_BASE_X - 5, y, SCALA_BASE_X, y);
 
             String number = String.valueOf(count);
@@ -124,22 +123,18 @@ public class BoxPlotDrawer {
         graphics.drawLine(PLOT_MIDDLE_X - 40, y, PLOT_MIDDLE_X + 40, y);
     }
 
-    private static void drawLegend(Graphics2D graphics, int height, Map<BoxPlotInfo, Color> colorMap) {
+    private static void drawLegend(Graphics2D graphics, int height, BoxPlotInfo[] info) {
         AtomicInteger y = new AtomicInteger(height);
 
-        colorMap.forEach(new BiConsumer<BoxPlotInfo, Color>() {
+        for (BoxPlotInfo boxPlotInfo : info) {
+            graphics.setColor(boxPlotInfo.color);
 
-            @Override
-            public void accept(BoxPlotInfo info, Color color) {
-                graphics.setColor(color);
+            graphics.fillRect(SCALA_BASE_X + 5, y.get() + 4, 12 ,12);
 
-                graphics.fillRect(SCALA_BASE_X + 5, y.get() + 4, 12 ,12);
+            graphics.setFont(graphics.getFont().deriveFont(14F));
+            graphics.setColor(Color.gray);
 
-                graphics.setFont(graphics.getFont().deriveFont(14F));
-                graphics.setColor(Color.gray);
-
-                graphics.drawString(info.name, SCALA_BASE_X + 20, y.getAndAdd(20) + 14);
-            }
-        });
+            graphics.drawString(boxPlotInfo.name, SCALA_BASE_X + 20, y.getAndAdd(20) + 14);
+        }
     }
 }
