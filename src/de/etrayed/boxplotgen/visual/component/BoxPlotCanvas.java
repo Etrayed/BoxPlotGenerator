@@ -1,6 +1,7 @@
 package de.etrayed.boxplotgen.visual.component;
 
 import de.etrayed.boxplotgen.BoxPlotGenerator;
+import de.etrayed.boxplotgen.visual.Window;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -39,6 +40,7 @@ public class BoxPlotCanvas extends JComponent {
     @Override
     protected void paintComponent(Graphics graphics) {
         if(BoxPlotGenerator.getInstance().getBoxPlotInfoList().size() == 0) {
+            BoxPlotGenerator.getInstance().setWindowScrollBarMaximum(Window.DEFAULT_SCROLL_BAR_MAX);
             return;
         }
 
@@ -53,8 +55,8 @@ public class BoxPlotCanvas extends JComponent {
 
             inputStream.close();
 
-            ((Graphics2D) graphics).drawImage(image.getSubimage(0, startY, 300, image.getHeight() < 700
-                    ? image.getHeight() : (700 - startY)), null, 0, 0);
+            ((Graphics2D) graphics).drawImage(image.getSubimage(0, startY, 300, image.getHeight() - startY),
+                    null, 0, 0);
 
             BoxPlotGenerator.getInstance().setWindowScrollBarMaximum(image.getHeight());
         } catch (IOException e) {

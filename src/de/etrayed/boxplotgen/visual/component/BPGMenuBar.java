@@ -47,6 +47,8 @@ public class BPGMenuBar extends JMenuBar {
 
     private final BoxPlotCreateDialog rawCreateDialog, calculatedCreateDialog;
 
+    private JSpinner scalingSpinner;
+
     private JComboBox<String> boxPlotChooser;
 
     public BPGMenuBar(JFrame parent) {
@@ -64,14 +66,14 @@ public class BPGMenuBar extends JMenuBar {
     }
 
     private void setupScalingDialog(JFrame parent) {
-        JSpinner scalingSpinner = new JSpinner(new SpinnerNumberModel(1, 1, null, 1));
-
         scalingDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         scalingDialog.setBounds(parent.getX() + Window.center(parent.getWidth(), 75), parent.getY()
                 + Window.center(parent.getHeight(), 75), 75, 90);
         scalingDialog.setResizable(false);
         scalingDialog.setLayout(null);
         scalingDialog.setIconImage(Window.ICON);
+
+        this.scalingSpinner = new JSpinner(new SpinnerNumberModel(1, 1, null, 1));
 
         scalingSpinner.setSize(192, 50);
         scalingSpinner.addChangeListener(new ChangeListener() {
@@ -192,6 +194,12 @@ public class BPGMenuBar extends JMenuBar {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(BoxPlotGenerator.getInstance().getBoxPlotInfoList().size() <= 1) {
+                    BoxPlotGenerator.getInstance().getBoxPlotInfoList().clear();
+
+                    return;
+                }
+
                 boxPlotChooser.removeAllItems();
 
                 for (BoxPlotInfo boxPlotInfo : BoxPlotGenerator.getInstance().getBoxPlotInfoList()) {
@@ -237,6 +245,9 @@ public class BPGMenuBar extends JMenuBar {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                scalingSpinner.setModel(new SpinnerNumberModel(BoxPlotGenerator.getInstance().getGlobalScaling(),
+                        1, null, 1));
+
                 scalingDialog.setVisible(true);
             }
         });

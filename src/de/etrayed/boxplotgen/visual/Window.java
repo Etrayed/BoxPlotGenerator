@@ -18,7 +18,7 @@ public class Window {
 
     public static final BufferedImage ICON;
 
-    private static final int DEFAULT_SCROLL_BAR_MAX = 700; // TODO: Fix ScrollBar
+    public static final int DEFAULT_SCROLL_BAR_MAX = 630;
 
     static {
         try {
