@@ -66,16 +66,18 @@ public class BPGMenuBar extends JMenuBar {
     }
 
     private void setupScalingDialog(JFrame parent) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        scalingDialog.setBounds(Window.center(screenSize.width, 156), Window.center(screenSize.height, 79),
+                156, 79);
         scalingDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        scalingDialog.setBounds(parent.getX() + Window.center(parent.getWidth(), 75), parent.getY()
-                + Window.center(parent.getHeight(), 75), 75, 90);
         scalingDialog.setResizable(false);
         scalingDialog.setLayout(null);
         scalingDialog.setIconImage(Window.ICON);
 
         this.scalingSpinner = new JSpinner(new SpinnerNumberModel(1, 1, null, 1));
 
-        scalingSpinner.setSize(192, 50);
+        scalingSpinner.setSize(150, 50);
         scalingSpinner.addChangeListener(new ChangeListener() {
 
             @Override
@@ -91,8 +93,8 @@ public class BPGMenuBar extends JMenuBar {
     private void setupDeleteDialog(JFrame parent) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        deleteDialog.setBounds(Window.center(screenSize.width, 195), Window.center(screenSize.height, 80),
-                195, 80);
+        deleteDialog.setBounds(Window.center(screenSize.width, 198), Window.center(screenSize.height, 69),
+                198, 69);
         deleteDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         deleteDialog.setResizable(false);
         deleteDialog.setLayout(null);

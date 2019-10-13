@@ -18,7 +18,7 @@ public class Window {
 
     public static final BufferedImage ICON;
 
-    public static final int DEFAULT_SCROLL_BAR_MAX = 630;
+    public static final int DEFAULT_SCROLL_BAR_MAX = 650;
 
     static {
         try {
@@ -52,7 +52,7 @@ public class Window {
         frame.setBounds(center(screenSize.width, 335), center(screenSize.height, 700), 335, 700);
         frame.setJMenuBar(new BPGMenuBar(frame));
 
-        ((JScrollBar) scrollBar).setBounds(300, 0, 30, 630);
+        ((JScrollBar) scrollBar).setBounds(300, 0, 30, 650);
         scrollBar.addAdjustmentListener(new AdjustmentListener() {
 
             @Override
