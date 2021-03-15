@@ -31,6 +31,7 @@ public class BPGMenuBar extends JMenuBar {
             @Override
             public void handleSuccess(BoxPlotInfo info) {
                 BoxPlotGenerator.getInstance().getBoxPlotInfoList().add(info);
+                BoxPlotGenerator.getInstance().resetCanvasCache();
                 BoxPlotGenerator.getInstance().repaintCanvas();
             }
 
@@ -75,14 +76,15 @@ public class BPGMenuBar extends JMenuBar {
         scalingDialog.setLayout(null);
         scalingDialog.setIconImage(Window.ICON);
 
-        this.scalingSpinner = new JSpinner(new SpinnerNumberModel(1, 1, null, 1));
+        this.scalingSpinner = new JSpinner(new SpinnerNumberModel(1.0, 0.0001, null, 0.5));
 
         scalingSpinner.setSize(150, 50);
         scalingSpinner.addChangeListener(new ChangeListener() {
 
             @Override
             public void stateChanged(ChangeEvent e) {
-                BoxPlotGenerator.getInstance().setGlobalScaling((Integer) scalingSpinner.getValue());
+                BoxPlotGenerator.getInstance().setGlobalScaling((Double) scalingSpinner.getValue());
+                BoxPlotGenerator.getInstance().resetCanvasCache();
                 BoxPlotGenerator.getInstance().repaintCanvas();
             }
         });
@@ -117,6 +119,7 @@ public class BPGMenuBar extends JMenuBar {
                         return info.name.equals(boxPlotChooser.getSelectedItem());
                     }
                 });
+                BoxPlotGenerator.getInstance().resetCanvasCache();
                 BoxPlotGenerator.getInstance().repaintCanvas();
 
                 deleteDialog.setVisible(false);
@@ -247,8 +250,7 @@ public class BPGMenuBar extends JMenuBar {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                scalingSpinner.setModel(new SpinnerNumberModel(BoxPlotGenerator.getInstance().getGlobalScaling(),
-                        1, null, 1));
+                scalingSpinner.getModel().setValue(BoxPlotGenerator.getInstance().getGlobalScaling());
 
                 scalingDialog.setVisible(true);
             }

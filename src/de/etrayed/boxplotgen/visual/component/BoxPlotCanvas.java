@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RasterFormatException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,9 +17,9 @@ import java.io.IOException;
  */
 public class BoxPlotCanvas extends JComponent {
 
-    private int scaling = 1;
-
     private int startY;
+
+    private BufferedImage cached;
 
     public BoxPlotCanvas() {
         setBounds(0, 0, 300, 700);
@@ -29,12 +30,8 @@ public class BoxPlotCanvas extends JComponent {
         this.startY = startY;
     }
 
-    public int getScaling() {
-        return scaling;
-    }
-
-    public void setScaling(int scaling) {
-        this.scaling = scaling;
+    public void resetCache() {
+        cached = null;
     }
 
     @Override
@@ -45,20 +42,26 @@ public class BoxPlotCanvas extends JComponent {
         }
 
         try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            if(cached == null) {
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-            BoxPlotGenerator.getInstance().exportCurrent(outputStream);
+                BoxPlotGenerator.getInstance().exportCurrent(outputStream);
 
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+                try (ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray())) {
+                    cached = ImageIO.read(inputStream);
+                }
+            }
 
-            BufferedImage image = ImageIO.read(inputStream);
+            try {
+                ((Graphics2D) graphics).drawImage(cached.getSubimage(0, startY, 300, cached.getHeight() - startY),
+                        null, 0, 0);
+            } catch (RasterFormatException e) {
+                BoxPlotGenerator.getInstance().resetScrolling(cached.getHeight());
 
-            inputStream.close();
+                return;
+            }
 
-            ((Graphics2D) graphics).drawImage(image.getSubimage(0, startY, 300, image.getHeight() - startY),
-                    null, 0, 0);
-
-            BoxPlotGenerator.getInstance().setWindowScrollBarMaximum(image.getHeight());
+            BoxPlotGenerator.getInstance().setWindowScrollBarMaximum(cached.getHeight());
         } catch (IOException e) {
             e.printStackTrace();
         }

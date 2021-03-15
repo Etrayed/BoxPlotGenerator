@@ -85,4 +85,13 @@ public class Window {
     public static int center(int full, int value) {
         return (full - value) / 2;
     }
+
+    public void resetScrolling(int max) {
+        scrollBar.setValue(scrollBar.getMinimum());
+        scrollBar.setMaximum(max);
+    }
+
+    public void resetCanvasCache() {
+        canvas.resetCache();
+    }
 }

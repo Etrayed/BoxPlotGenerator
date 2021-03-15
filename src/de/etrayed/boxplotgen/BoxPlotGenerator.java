@@ -22,7 +22,7 @@ public class BoxPlotGenerator {
 
     private final Window window;
 
-    private int globalScaling = 1;
+    private double globalScaling = 1;
 
     private BoxPlotGenerator() {
         this.fileExporter = new FileExporter();
@@ -53,12 +53,20 @@ public class BoxPlotGenerator {
         window.setScrollBarMaximum(maximum);
     }
 
-    public int getGlobalScaling() {
+    public double getGlobalScaling() {
         return globalScaling;
     }
 
-    public void setGlobalScaling(int globalScaling) {
+    public void setGlobalScaling(double globalScaling) {
         this.globalScaling = globalScaling;
+    }
+
+    public void resetScrolling(int max) {
+        window.resetScrolling(max);
+    }
+
+    public void resetCanvasCache() {
+        window.resetCanvasCache();
     }
 
     public static BoxPlotGenerator getInstance() {

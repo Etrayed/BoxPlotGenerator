@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class FileExporter {
 
-    public void export(OutputStream outputStream, int scaling) throws IOException {
+    public void export(OutputStream outputStream, double scaling) throws IOException {
         List<BoxPlotInfo> boxPlotInfoList = BoxPlotGenerator.getInstance().getBoxPlotInfoList();
 
         if(boxPlotInfoList.size() == 0) {
@@ -43,7 +43,7 @@ public class FileExporter {
             }
         }
 
-        int height = (BoxPlotDrawer.SEPARATING * (((int) (highestMaximum - lowestMinimum) / scaling) + 2)) + 10;
+        int height = (int) Math.ceil((BoxPlotDrawer.SEPARATING * (((highestMaximum - lowestMinimum) / scaling) + 2.0D)) + 10.0D);
 
         BufferedImage image = new BufferedImage(300, height + (boxPlotInfoList.size() == 1 ? 0
                 : (boxPlotInfoList.size() * 20)), BufferedImage.TYPE_INT_RGB);
